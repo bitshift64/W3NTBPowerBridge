@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Power button with antenna icon">
+  <rect width="256" height="256" rx="48" fill="#0B1220"/>
+  <path d="M128 42v64" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round"/>
+  <path d="M88 78a76 76 0 1 0 80 0" fill="none" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round"/>
+  <path d="M128 150v44" stroke="#22C55E" stroke-width="14" stroke-linecap="round"/>
+  <path d="M92 202h72" stroke="#22C55E" stroke-width="14" stroke-linecap="round"/>
+  <path d="M104 178l24-28 24 28" fill="none" stroke="#22C55E" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M72 124c15-20 34-30 56-30s41 10 56 30" fill="none" stroke="#38BDF8" stroke-width="10" stroke-linecap="round"/>
+</svg>

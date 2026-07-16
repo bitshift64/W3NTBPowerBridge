@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Taskbar W3 icon">
+  <rect width="256" height="256" rx="48" fill="#111827"/>
+  <path d="M42 74l24 108 34-74 34 74 24-108" fill="none" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M174 82h24c12 0 22 10 22 22s-10 22-22 22h-18" fill="none" stroke="#38BDF8" stroke-width="22" stroke-linecap="round"/>
+  <path d="M180 126h20c13 0 24 10 24 23s-11 23-24 23h-30" fill="none" stroke="#38BDF8" stroke-width="22" stroke-linecap="round"/>
+</svg>

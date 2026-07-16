@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Taskbar power bridge icon">
+  <rect width="256" height="256" rx="48" fill="#101418"/>
+  <path d="M128 52v64" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round"/>
+  <path d="M90 82c-25 14-42 41-42 72 0 45 35 80 80 80s80-35 80-80c0-31-17-58-42-72" fill="none" stroke="#22C55E" stroke-width="24" stroke-linecap="round"/>
+  <path d="M82 154h92" stroke="#F8FAFC" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="128" cy="154" r="13" fill="#38BDF8"/>
+</svg>

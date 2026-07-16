@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "W3NTBPowerBridge", "src\W3NTBPowerBridge\W3NTBPowerBridge.csproj", "{9C98A85B-AC27-4C64-B39A-15B80DE67CA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "W3NTBPowerBridge.Tests", "tests\W3NTBPowerBridge.Tests\W3NTBPowerBridge.Tests.csproj", "{6CE7E495-D0C8-4D52-97EE-BB053E1C5B90}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C98A85B-AC27-4C64-B39A-15B80DE67CA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C98A85B-AC27-4C64-B39A-15B80DE67CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C98A85B-AC27-4C64-B39A-15B80DE67CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C98A85B-AC27-4C64-B39A-15B80DE67CA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CE7E495-D0C8-4D52-97EE-BB053E1C5B90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CE7E495-D0C8-4D52-97EE-BB053E1C5B90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CE7E495-D0C8-4D52-97EE-BB053E1C5B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE7E495-D0C8-4D52-97EE-BB053E1C5B90}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Power button with radio dial icon">
+  <rect width="256" height="256" rx="48" fill="#111827"/>
+  <path d="M128 42v64" stroke="#F9FAFB" stroke-width="24" stroke-linecap="round"/>
+  <path d="M88 78a76 76 0 1 0 80 0" fill="none" stroke="#F9FAFB" stroke-width="24" stroke-linecap="round"/>
+  <rect x="76" y="134" width="104" height="54" rx="10" fill="#111827" stroke="#38BDF8" stroke-width="12"/>
+  <path d="M94 154h34" stroke="#F9FAFB" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="154" cy="161" r="13" fill="#22C55E"/>
+</svg>

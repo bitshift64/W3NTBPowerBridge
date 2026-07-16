@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Power button W3 ham icon">
+  <rect width="256" height="256" rx="48" fill="#0F172A"/>
+  <path d="M128 40v62" stroke="#F8FAFC" stroke-width="22" stroke-linecap="round"/>
+  <path d="M88 76a78 78 0 1 0 80 0" fill="none" stroke="#F8FAFC" stroke-width="22" stroke-linecap="round"/>
+  <path d="M72 150l14 44 20-34 20 34 14-44" fill="none" stroke="#22C55E" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M158 150h18c10 0 18 7 18 16s-8 16-18 16h-14" fill="none" stroke="#38BDF8" stroke-width="12" stroke-linecap="round"/>
+  <path d="M162 182h18c10 0 18 7 18 16s-8 16-18 16h-22" fill="none" stroke="#38BDF8" stroke-width="12" stroke-linecap="round"/>
+</svg>

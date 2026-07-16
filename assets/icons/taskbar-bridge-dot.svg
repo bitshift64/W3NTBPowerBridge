@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Taskbar bridge dot icon">
+  <rect width="256" height="256" rx="48" fill="#0B1220"/>
+  <path d="M54 154c20-42 45-63 74-63s54 21 74 63" fill="none" stroke="#F8FAFC" stroke-width="26" stroke-linecap="round"/>
+  <path d="M70 158h116" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="128" cy="100" r="18" fill="#22C55E"/>
+</svg>

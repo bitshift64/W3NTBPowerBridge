@@ -1,0 +1,65 @@
+name: Bug report
+description: Report something that is not working correctly.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem with W3NTB Power Bridge.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected to happen.
+      placeholder: Tell us what you clicked, what changed, and what did not work.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the steps that cause the problem.
+      placeholder: |
+        1. Start ACLog
+        2. Start wfview
+        3. Click ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      placeholder: 0.1.0-beta
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - ACLog connection
+        - wfview connection
+        - Frequency or mode sync
+        - ON AIR indicator
+        - Shelly power control beta
+        - Installer or startup
+        - User interface
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log lines
+      description: Paste any useful lines from the app event log or app.log. Remove anything private first.
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Station setup
+      description: Include Windows version, ACLog version, wfview version, radio model, and whether Tailscale/Shelly is involved.
+    validations:
+      required: false

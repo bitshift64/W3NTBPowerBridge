@@ -1,0 +1,218 @@
+<Window x:Class="W3NTBPowerBridge.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:W3NTBPowerBridge.ViewModels"
+        Title="W3NTB Power Bridge"
+        Height="520"
+        Width="760"
+        MinHeight="300"
+        MinWidth="520"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        Foreground="{DynamicResource PrimaryTextBrush}">
+  <Window.DataContext>
+    <vm:MainViewModel />
+  </Window.DataContext>
+  <Window.Resources>
+    <Style x:Key="StatusLight" TargetType="Ellipse">
+      <Setter Property="Width" Value="14" />
+      <Setter Property="Height" Value="14" />
+      <Setter Property="Stroke" Value="#666666" />
+      <Setter Property="StrokeThickness" Value="1" />
+      <Setter Property="Fill" Value="#E5C100" />
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="Connected">
+          <Setter Property="Fill" Value="#2EAD4A" />
+        </DataTrigger>
+        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="Disconnected">
+          <Setter Property="Fill" Value="#C93434" />
+        </DataTrigger>
+        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="Connecting">
+          <Setter Property="Fill" Value="#E5C100" />
+        </DataTrigger>
+        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="Waiting">
+          <Setter Property="Fill" Value="#E5C100" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+    <Style TargetType="Button">
+      <Setter Property="Padding" Value="14,8" />
+      <Setter Property="Margin" Value="0,0,8,8" />
+      <Setter Property="MinWidth" Value="105" />
+      <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+      <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource PanelBorderBrush}" />
+    </Style>
+    <Style TargetType="TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+    </Style>
+    <Style x:Key="OnAirBadge" TargetType="Border">
+      <Setter Property="Background" Value="{DynamicResource OnAirIdleBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource OnAirIdleBorderBrush}" />
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="True">
+          <Setter Property="Background" Value="#3A0000" />
+          <Setter Property="BorderBrush" Value="#FF3333" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+    <Style x:Key="OnAirLamp" TargetType="Ellipse">
+      <Setter Property="Fill" Value="{DynamicResource OnAirIdleLampBrush}" />
+      <Setter Property="Stroke" Value="{DynamicResource OnAirIdleBorderBrush}" />
+      <Setter Property="StrokeThickness" Value="1" />
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="True">
+          <Setter Property="Fill" Value="#FF3333" />
+          <Setter Property="Stroke" Value="#FF8A8A" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+    <Style x:Key="OnAirText" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource OnAirIdleTextBrush}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="True">
+          <Setter Property="Foreground" Value="#FF3333" />
+          <Setter Property="FontWeight" Value="Bold" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+  </Window.Resources>
+  <DockPanel Margin="12">
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center">
+      <TextBlock Text="W3NTB Power Bridge"
+                 FontSize="20"
+                 FontWeight="SemiBold" />
+      <Border Style="{StaticResource OnAirBadge}"
+              Tag="{Binding IsOnAir}"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="8,3"
+              Margin="12,0,0,0"
+              VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <Ellipse Style="{StaticResource OnAirLamp}" Tag="{Binding IsOnAir}" Width="10" Height="10" Margin="0,0,6,0" />
+          <TextBlock Style="{StaticResource OnAirText}" Tag="{Binding IsOnAir}" Text="ON AIR" />
+        </StackPanel>
+      </Border>
+    </StackPanel>
+
+    <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+      <Button Content="Start Station" Command="{Binding StartStationCommand}" MinWidth="120" />
+      <Button Content="Connect All" Command="{Binding ConnectAllCommand}" />
+      <Button Content="Disconnect All" Command="{Binding DisconnectAllCommand}" />
+      <Button Content="Refresh Power" Command="{Binding RefreshShellyCommand}" Visibility="{Binding ShellyControlsVisibility}" />
+      <Button Content="Power On" Command="{Binding PowerOnCommand}" Visibility="{Binding ShellyControlsVisibility}" />
+      <Button Content="Power Off" Command="{Binding PowerOffCommand}" Visibility="{Binding ShellyControlsVisibility}" />
+      <Button Content="Open wfview" Command="{Binding OpenWfviewCommand}" />
+      <Button Content="Open ACLog" Command="{Binding OpenAcLogCommand}" />
+      <Button Content="Clear Log" Command="{Binding ClearLogCommand}" Visibility="{Binding EventLogVisibility}" />
+      <Button Content="Settings" Command="{Binding OpenSettingsCommand}" />
+    </WrapPanel>
+
+    <Grid DockPanel.Dock="Top" Margin="0,0,0,10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,8,8" Visibility="{Binding AcLogStatusVisibility}">
+        <StackPanel>
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Ellipse Style="{StaticResource StatusLight}" Tag="{Binding AcLogStatus}" />
+            <TextBlock Text="ACLog API" FontWeight="SemiBold" Margin="8,0,0,0" />
+          </StackPanel>
+          <TextBlock Text="{Binding AcLogStatus}" Margin="22,6,0,0" Foreground="{DynamicResource SecondaryTextBrush}" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="0" Grid.Column="1" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,8,8" Visibility="{Binding WfviewStatusVisibility}">
+        <StackPanel>
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Ellipse Style="{StaticResource StatusLight}" Tag="{Binding RigStatus}" />
+            <TextBlock Text="wfview rigctld" FontWeight="SemiBold" Margin="8,0,0,0" />
+          </StackPanel>
+          <TextBlock Text="{Binding RigStatus}" Margin="22,6,0,0" Foreground="{DynamicResource SecondaryTextBrush}" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,8,8" Visibility="{Binding RadioFrequencyVisibility}">
+        <StackPanel>
+          <TextBlock Text="Radio frequency" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding RadioFrequencyDisplay}" FontSize="18" Margin="0,6,0,0" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="0" Grid.Column="3" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,8" Visibility="{Binding ModeAndPowerVisibility}">
+        <StackPanel>
+          <TextBlock Text="Mode / RF power" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding ModeAndPowerDisplay}" FontSize="18" Margin="0,6,0,0" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="1" Grid.Column="0" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,8,0" Visibility="{Binding LastRequestedVisibility}">
+        <StackPanel>
+          <TextBlock Text="Last requested frequency" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding LastRequestedFrequencyDisplay}" FontSize="18" Margin="0,6,0,0" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="1" Grid.Column="1" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,8,0" Visibility="{Binding LastConfirmedVisibility}">
+        <StackPanel>
+          <TextBlock Text="Last confirmed frequency" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding LastConfirmedFrequencyDisplay}" FontSize="18" Margin="0,6,0,0" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" Padding="10" Visibility="{Binding TuneResultVisibility}">
+        <StackPanel>
+          <TextBlock Text="Last tune result" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding LastTuneResult}" FontSize="18" Margin="0,6,0,0" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <Expander Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Header="Station Power" IsExpanded="{Binding IsPowerPanelExpanded, Mode=OneWay}" Visibility="{Binding ShellyControlsVisibility}" Margin="0,8,0,0">
+      <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" Padding="10">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.1*" />
+            <ColumnDefinition Width="1.1*" />
+            <ColumnDefinition Width="1.1*" />
+            <ColumnDefinition Width="1.5*" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Grid.Column="0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+              <Ellipse Style="{StaticResource StatusLight}" Tag="{Binding ShellyStatusIndicator}" />
+              <TextBlock Text="Station power" FontWeight="SemiBold" Margin="8,0,0,0" />
+            </StackPanel>
+            <TextBlock Text="{Binding ShellyPowerStateDisplay}" FontSize="18" Margin="22,6,0,0" />
+          </StackPanel>
+          <StackPanel Grid.Column="1">
+            <TextBlock Text="Power usage" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ShellyPowerUsageDisplay}" FontSize="18" Margin="0,6,0,0" />
+          </StackPanel>
+          <StackPanel Grid.Column="2">
+            <TextBlock Text="Voltage / Current" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ShellyElectricalDisplay}" FontSize="18" Margin="0,6,0,0" />
+          </StackPanel>
+          <StackPanel Grid.Column="3">
+            <TextBlock Text="Station startup" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding StationStartupStatus}" FontSize="18" Margin="0,6,0,0" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding ShellyConfirmationDisplay}" Margin="0,6,0,0" TextWrapping="Wrap" Foreground="{DynamicResource SecondaryTextBrush}" />
+          </StackPanel>
+        </Grid>
+      </Border>
+      </Expander>
+    </Grid>
+
+    <GroupBox Header="Event Log" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" Foreground="{DynamicResource PrimaryTextBrush}" Visibility="{Binding EventLogVisibility}">
+      <ListBox ItemsSource="{Binding EventLog}" FontFamily="Consolas" FontSize="13" BorderThickness="0" Background="{DynamicResource PanelBackgroundBrush}" Foreground="{DynamicResource PrimaryTextBrush}" />
+    </GroupBox>
+  </DockPanel>
+</Window>

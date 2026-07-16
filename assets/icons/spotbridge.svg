@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="SpotBridge icon">
+  <rect width="256" height="256" rx="44" fill="#0F172A"/>
+  <path d="M58 72h64v46H58z" rx="8" fill="#E2E8F0"/>
+  <path d="M134 138h64v46h-64z" rx="8" fill="#E2E8F0"/>
+  <path d="M102 118c26 0 26 20 52 20" fill="none" stroke="#38BDF8" stroke-width="12" stroke-linecap="round"/>
+  <path d="M88 95h8M108 95h8M150 161h8M170 161h8" stroke="#0F172A" stroke-width="8" stroke-linecap="round"/>
+  <path d="M128 58c30 12 48 34 54 66M128 198c-30-12-48-34-54-66" fill="none" stroke="#22C55E" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="128" cy="128" r="12" fill="#FACC15"/>
+</svg>

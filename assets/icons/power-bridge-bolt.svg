@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Power Bridge bolt icon">
+  <rect width="256" height="256" rx="48" fill="#111827"/>
+  <path d="M128 46v62" stroke="#E5E7EB" stroke-width="22" stroke-linecap="round"/>
+  <path d="M88 82a72 72 0 1 0 80 0" fill="none" stroke="#E5E7EB" stroke-width="22" stroke-linecap="round"/>
+  <path d="M132 96l-34 60h32l-10 48 40-68h-32z" fill="#FACC15"/>
+  <circle cx="128" cy="148" r="74" fill="none" stroke="#22C55E" stroke-width="10"/>
+</svg>

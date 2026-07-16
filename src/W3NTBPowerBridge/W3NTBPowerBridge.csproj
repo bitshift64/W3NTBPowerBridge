@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>W3NTBPowerBridge</AssemblyName>
+    <RootNamespace>W3NTBPowerBridge</RootNamespace>
+    <Product>W3NTB Power Bridge</Product>
+    <Company>W3NTB</Company>
+    <Version>0.1.0</Version>
+    <InformationalVersion>0.1.0-beta</InformationalVersion>
+    <Description>Remote station power and N3FJP-to-wfview bridge for W3NTB.</Description>
+    <ApplicationIcon>Assets\w3ntb-power-bridge.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Assets\w3ntb-power-bridge.ico" />
+  </ItemGroup>
+</Project>

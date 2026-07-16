@@ -1,0 +1,46 @@
+name: Feature request
+description: Suggest an improvement or new station-control feature.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement for W3NTB Power Bridge.
+  - type: textarea
+    id: feature
+    attributes:
+      label: What would you like added?
+      description: Describe the feature or workflow you want.
+      placeholder: I would like the app to...
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Why would this help?
+      description: Explain the station workflow or operating problem this would solve.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - ACLog integration
+        - wfview integration
+        - Station power
+        - Radio status
+        - Installer or updates
+        - User interface
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Mention any workaround you currently use.
+    validations:
+      required: false
