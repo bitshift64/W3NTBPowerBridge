@@ -56,6 +56,16 @@ public sealed class AppSettings
     public bool AutoLaunchAcLog { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether read-only RF power from wfview should update ACLog's power field.
+    /// </summary>
+    public bool SyncRfPowerToAcLog { get; set; }
+
+    /// <summary>
+    /// Gets or sets the radio's maximum RF power in watts for converting wfview RF power percent to ACLog watts.
+    /// </summary>
+    public double RadioMaxPowerWatts { get; set; } = 100.0;
+
+    /// <summary>
     /// Gets or sets a value indicating whether Shelly station power monitoring is enabled.
     /// </summary>
     public bool ShellyEnabled { get; set; }

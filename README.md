@@ -24,6 +24,7 @@ More remote-access detail is available in [Remote Access and Tailscale Notes](do
 - Polls wfview for frequency, mode, RF power, and read-only PTT/transmit state.
 - Shows a persistent **ON AIR** indicator that lights red only when wfview positively reports transmit is active.
 - Updates ACLog's band, mode, and frequency fields from wfview so ACLog tracks radio changes made in wfview.
+- Optionally updates ACLog's log-entry Power field from wfview's read-only RF power level.
 - Optionally monitors and controls a Shelly Gen 4 plug for station power.
 - Provides a compact operator-friendly main window with configurable status panels and optional event log.
 - Reconnects both TCP clients automatically after disconnects.
@@ -113,6 +114,12 @@ The **Start Station** button can power on the Shelly-controlled supply, wait for
 Use **Settings** to choose which main-screen panels are visible. The event log can be hidden, and the Shelly station power section only appears when Shelly integration is enabled. The selected icon concept is `assets/icons/power-ham-w3.svg`.
 
 Dark mode is available for night operating and uses a black background with red text.
+
+## ACLog power field sync
+
+The app can optionally copy wfview's read-only RF power level into ACLog's log-entry **Power** field. wfview reports RF power as a percentage, so W3NTB Power Bridge converts it to watts using the **Radio max watts** setting. For an IC-7300, leave this at `100`.
+
+This only updates the value ACLog will log with the QSO. It does not send radio power-control commands or change the transmitter power setting.
 
 ## Tests
 

@@ -70,8 +70,10 @@ public sealed class AcLogClientService
     /// Sends the current radio state to ACLog's band, mode, and frequency fields.
     /// </summary>
     /// <param name="state">Current radio state from wfview.</param>
+    /// <param name="syncRfPower">Whether ACLog's power field should be updated from read-only wfview RF power.</param>
+    /// <param name="radioMaxPowerWatts">Radio maximum output power in watts.</param>
     /// <returns>A task representing the update operation.</returns>
-    public async Task UpdateRadioStateAsync(RadioState state)
+    public async Task UpdateRadioStateAsync(RadioState state, bool syncRfPower = false, double radioMaxPowerWatts = 100.0)
     {
         var client = _client;
         if (client is null || !client.Connected || state.FrequencyHz is null)
@@ -101,6 +103,12 @@ public sealed class AcLogClientService
             commands.Add($"<CMD><UPDATE><CONTROL>TXTENTRYMODE</CONTROL><VALUE>{EscapeXml(mode)}</VALUE></CMD>");
         }
 
+        var powerWatts = FormatPowerWatts(state.TxPowerPercent, radioMaxPowerWatts);
+        if (syncRfPower && !string.IsNullOrWhiteSpace(powerWatts))
+        {
+            commands.Add($"<CMD><UPDATE><CONTROL>TXTENTRYPOWER</CONTROL><VALUE>{EscapeXml(powerWatts)}</VALUE></CMD>");
+        }
+
         commands.Add("<CMD><IGNORERIGPOLLS><VALUE>FALSE</VALUE></CMD>");
 
         await _sendLock.WaitAsync().ConfigureAwait(false);
@@ -115,7 +123,8 @@ public sealed class AcLogClientService
                 await Task.Delay(TimeSpan.FromMilliseconds(10)).ConfigureAwait(false);
             }
 
-            _logger.Info($"Updated ACLog from wfview: {frequencyMhz} MHz, band {band}, mode {mode}.");
+            var powerLog = string.IsNullOrWhiteSpace(powerWatts) || !syncRfPower ? string.Empty : $", power {powerWatts} W";
+            _logger.Info($"Updated ACLog from wfview: {frequencyMhz} MHz, band {band}, mode {mode}{powerLog}.");
         }
         catch (Exception exception)
         {
@@ -274,6 +283,17 @@ public sealed class AcLogClientService
     private static string EscapeXml(string value)
     {
         return System.Security.SecurityElement.Escape(value) ?? string.Empty;
+    }
+
+    private static string FormatPowerWatts(double? txPowerPercent, double radioMaxPowerWatts)
+    {
+        if (txPowerPercent is null || radioMaxPowerWatts <= 0)
+        {
+            return string.Empty;
+        }
+
+        var watts = txPowerPercent.Value / 100.0 * radioMaxPowerWatts;
+        return Math.Round(watts).ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
     private bool ShouldIgnoreFrequencyEcho(string frequencyMhz)

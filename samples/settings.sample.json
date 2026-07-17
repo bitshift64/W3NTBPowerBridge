@@ -9,6 +9,8 @@
   "AutoStartStationOnStartup": false,
   "AutoLaunchWfview": false,
   "AutoLaunchAcLog": false,
+  "SyncRfPowerToAcLog": false,
+  "RadioMaxPowerWatts": 100.0,
   "ShellyEnabled": false,
   "ShellyHost": "shellyplugusg4-xxxxxxxxxxxx.local",
   "ShellyPort": 80,

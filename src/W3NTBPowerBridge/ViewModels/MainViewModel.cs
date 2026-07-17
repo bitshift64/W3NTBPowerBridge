@@ -30,6 +30,7 @@ public sealed class MainViewModel : ObservableObject
     private long? _lastConfirmedFrequencyHz;
     private long? _lastAcLogSyncedFrequencyHz;
     private string? _lastAcLogSyncedMode;
+    private double? _lastAcLogSyncedPowerPercent;
     private string? _pendingAcLogMode;
     private DateTimeOffset _suppressAcLogSyncUntil = DateTimeOffset.MinValue;
     private string _lastTuneResult = "No tune request yet.";
@@ -533,9 +534,10 @@ public sealed class MainViewModel : ObservableObject
             && DateTimeOffset.Now > _suppressAcLogSyncUntil
             && ShouldSyncRadioStateToAcLog(state))
         {
-            await _acLogClient.UpdateRadioStateAsync(state).ConfigureAwait(false);
+            await _acLogClient.UpdateRadioStateAsync(state, _settings.SyncRfPowerToAcLog, _settings.RadioMaxPowerWatts).ConfigureAwait(false);
             _lastAcLogSyncedFrequencyHz = state.FrequencyHz;
             _lastAcLogSyncedMode = state.Mode;
+            _lastAcLogSyncedPowerPercent = state.TxPowerPercent;
         }
     }
 
@@ -577,7 +579,19 @@ public sealed class MainViewModel : ObservableObject
     private bool ShouldSyncRadioStateToAcLog(RadioState state)
     {
         return state.FrequencyHz != _lastAcLogSyncedFrequencyHz
-            || !string.Equals(state.Mode, _lastAcLogSyncedMode, StringComparison.OrdinalIgnoreCase);
+            || !string.Equals(state.Mode, _lastAcLogSyncedMode, StringComparison.OrdinalIgnoreCase)
+            || (_settings.SyncRfPowerToAcLog && HasPowerChanged(state.TxPowerPercent));
+    }
+
+    private bool HasPowerChanged(double? txPowerPercent)
+    {
+        if (txPowerPercent is null)
+        {
+            return false;
+        }
+
+        return _lastAcLogSyncedPowerPercent is null
+            || Math.Abs(txPowerPercent.Value - _lastAcLogSyncedPowerPercent.Value) >= 0.5;
     }
 
     private static string MapAcLogModeToRigMode(string? mode, long frequencyHz)

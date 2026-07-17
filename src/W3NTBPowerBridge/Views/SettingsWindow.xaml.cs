@@ -26,6 +26,8 @@ public partial class SettingsWindow : Window
             AutoStartStationOnStartup = settings.AutoStartStationOnStartup,
             AutoLaunchWfview = settings.AutoLaunchWfview,
             AutoLaunchAcLog = settings.AutoLaunchAcLog,
+            SyncRfPowerToAcLog = settings.SyncRfPowerToAcLog,
+            RadioMaxPowerWatts = settings.RadioMaxPowerWatts,
             ShellyEnabled = settings.ShellyEnabled,
             ShellyHost = settings.ShellyHost,
             ShellyPort = settings.ShellyPort,
