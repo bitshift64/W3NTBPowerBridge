@@ -103,6 +103,47 @@ public static class AcLogMessageParser
     }
 
     /// <summary>
+    /// Attempts to parse ACLog's band, mode, and frequency response.
+    /// </summary>
+    /// <param name="xml">The incoming XML message.</param>
+    /// <param name="request">The parsed frequency request.</param>
+    /// <returns>True when the response contains a valid frequency value.</returns>
+    public static bool TryParseReadBmfResponse(string xml, out FrequencyRequest request)
+    {
+        request = new FrequencyRequest(0, string.Empty);
+
+        try
+        {
+            var document = XDocument.Parse(xml, LoadOptions.None);
+            var responseElement = document.Root?.DescendantsAndSelf()
+                .FirstOrDefault(element => string.Equals(element.Name.LocalName, "READBMFRESPONSE", StringComparison.OrdinalIgnoreCase));
+            if (responseElement is null)
+            {
+                return false;
+            }
+
+            var frequencyMhz = FindValue(responseElement, "FREQ");
+            if (string.IsNullOrWhiteSpace(frequencyMhz) || !FrequencyConverter.TryMhzToHz(frequencyMhz, out var frequencyHz))
+            {
+                return false;
+            }
+
+            var mode = FindValue(responseElement, "MODE");
+            if (string.IsNullOrWhiteSpace(mode))
+            {
+                mode = FindValue(responseElement, "MODETEST");
+            }
+
+            request = new FrequencyRequest(frequencyHz, frequencyMhz.Trim(), NormalizeOptionalMode(mode), "READBMFRESPONSE");
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Attempts to parse a mode text field update from ACLog.
     /// </summary>
     /// <param name="xml">The incoming XML message.</param>
@@ -139,6 +180,11 @@ public static class AcLogMessageParser
 
         return root.DescendantsAndSelf()
             .FirstOrDefault(element => string.Equals(element.Name.LocalName, "CHANGEFREQ", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string? NormalizeOptionalMode(string? mode)
+    {
+        return string.IsNullOrWhiteSpace(mode) ? null : mode.Trim().ToUpperInvariant();
     }
 
     private static string? ExtractTagValue(string xml, string tagName)

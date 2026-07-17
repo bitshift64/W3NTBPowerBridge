@@ -69,4 +69,48 @@ public sealed class AcLogMessageParserTests
         Assert.IsTrue(parsed);
         Assert.AreEqual("SSB", mode);
     }
+
+    [TestMethod]
+    public void TryParseReadBmfResponse_ValidXml_ReturnsFrequencyAndMode()
+    {
+        const string xml = "<CMD><READBMFRESPONSE><BAND>40</BAND><MODE>SSB</MODE><MODETEST>PH</MODETEST><FREQ>7.22802</FREQ></READBMFRESPONSE></CMD>";
+
+        var parsed = AcLogMessageParser.TryParseReadBmfResponse(xml, out var request);
+
+        Assert.IsTrue(parsed);
+        Assert.AreEqual(7_228_020, request.FrequencyHz);
+        Assert.AreEqual("7.22802", request.OriginalValue);
+        Assert.AreEqual("SSB", request.Mode);
+        Assert.AreEqual("READBMFRESPONSE", request.Source);
+    }
+
+    [TestMethod]
+    public void TryParseReadBmfResponse_UsesModeTestWhenModeIsBlank()
+    {
+        const string xml = "<CMD><READBMFRESPONSE><BAND>20</BAND><MODE></MODE><MODETEST>DIG</MODETEST><FREQ>14.074</FREQ></READBMFRESPONSE></CMD>";
+
+        var parsed = AcLogMessageParser.TryParseReadBmfResponse(xml, out var request);
+
+        Assert.IsTrue(parsed);
+        Assert.AreEqual(14_074_000, request.FrequencyHz);
+        Assert.AreEqual("DIG", request.Mode);
+    }
+
+    [TestMethod]
+    public void TryParseReadBmfResponse_MissingFrequency_ReturnsFalse()
+    {
+        const string xml = "<CMD><READBMFRESPONSE><BAND>40</BAND><MODE>SSB</MODE></READBMFRESPONSE></CMD>";
+
+        var parsed = AcLogMessageParser.TryParseReadBmfResponse(xml, out _);
+
+        Assert.IsFalse(parsed);
+    }
+
+    [TestMethod]
+    public void TryParseReadBmfResponse_MalformedXml_ReturnsFalse()
+    {
+        var parsed = AcLogMessageParser.TryParseReadBmfResponse("<CMD><READBMFRESPONSE><FREQ>7.22802", out _);
+
+        Assert.IsFalse(parsed);
+    }
 }

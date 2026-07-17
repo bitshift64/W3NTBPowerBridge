@@ -182,6 +182,11 @@ public sealed class AcLogClientService
                     _logger.Info($"ACLog CHANGEFREQ request received: {request.OriginalValue} MHz ({request.FrequencyHz} Hz).");
                     FrequencyRequested?.Invoke(this, request);
                 }
+                else if (AcLogMessageParser.TryParseReadBmfResponse(message, out request))
+                {
+                    _logger.Info($"ACLog READBMF response received: {request.OriginalValue} MHz ({request.FrequencyHz} Hz), mode {request.Mode ?? "unknown"}.");
+                    FrequencyRequested?.Invoke(this, request);
+                }
                 else if (AcLogMessageParser.TryParseModeUpdate(message, out var mode))
                 {
                     if (!ShouldIgnoreModeEcho(mode))
