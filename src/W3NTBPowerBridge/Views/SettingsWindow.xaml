@@ -69,6 +69,9 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
 
       <TextBlock Grid.Row="0" Grid.Column="0" Text="ACLog host" Margin="0,0,10,10" VerticalAlignment="Center" />
@@ -83,38 +86,43 @@
       <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding WfviewPath}" Margin="0,0,0,10" />
       <TextBlock Grid.Row="5" Grid.Column="0" Text="ACLog.exe path" Margin="0,0,10,10" VerticalAlignment="Center" />
       <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding AcLogPath}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="6" Grid.Column="1" Content="Connect automatically on startup" IsChecked="{Binding AutoConnectOnStartup}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="7" Grid.Column="1" Content="Launch wfview automatically" IsChecked="{Binding AutoLaunchWfview}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="8" Grid.Column="1" Content="Launch ACLog automatically" IsChecked="{Binding AutoLaunchAcLog}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="9" Grid.Column="1" Content="Sync RF power to ACLog power field" IsChecked="{Binding SyncRfPowerToAcLog}" Margin="0,0,0,10" />
-      <TextBlock Grid.Row="10" Grid.Column="0" Text="Radio max watts" Margin="0,0,10,10" VerticalAlignment="Center" />
-      <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding RadioMaxPowerWatts}" Margin="0,0,0,10" />
-      <Separator Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,16" />
-      <CheckBox Grid.Row="12" Grid.Column="1" Content="Start full station sequence on startup" IsChecked="{Binding AutoStartStationOnStartup}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="13" Grid.Column="1" Content="Enable Shelly station power" IsChecked="{Binding ShellyEnabled}" Margin="0,0,0,10" />
-      <TextBlock Grid.Row="14" Grid.Column="0" Text="Shelly host" Margin="0,0,10,10" VerticalAlignment="Center" />
-      <TextBox Grid.Row="14" Grid.Column="1" Text="{Binding ShellyHost}" Margin="0,0,0,10" />
-      <TextBlock Grid.Row="15" Grid.Column="0" Text="Shelly port / switch ID" Margin="0,0,10,10" VerticalAlignment="Center" />
-      <StackPanel Grid.Row="15" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
+      <TextBlock Grid.Row="6" Grid.Column="0" Text="Server command" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding WfviewServerLaunchCommand}" Margin="0,0,0,10" />
+      <TextBlock Grid.Row="7" Grid.Column="0" Text="Server arguments" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding WfviewServerLaunchArguments}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="8" Grid.Column="1" Content="Connect automatically on startup" IsChecked="{Binding AutoConnectOnStartup}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="9" Grid.Column="1" Content="Launch wfview automatically" IsChecked="{Binding AutoLaunchWfview}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="10" Grid.Column="1" Content="Launch ACLog automatically" IsChecked="{Binding AutoLaunchAcLog}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="11" Grid.Column="1" Content="Launch server during Start Station" IsChecked="{Binding LaunchWfviewServerDuringStartStation}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="12" Grid.Column="1" Content="Sync RF power to ACLog power field" IsChecked="{Binding SyncRfPowerToAcLog}" Margin="0,0,0,10" />
+      <TextBlock Grid.Row="13" Grid.Column="0" Text="Radio max watts" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <TextBox Grid.Row="13" Grid.Column="1" Text="{Binding RadioMaxPowerWatts}" Margin="0,0,0,10" />
+      <Separator Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,16" />
+      <CheckBox Grid.Row="15" Grid.Column="1" Content="Start full station sequence on startup" IsChecked="{Binding AutoStartStationOnStartup}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="16" Grid.Column="1" Content="Enable Shelly station power" IsChecked="{Binding ShellyEnabled}" Margin="0,0,0,10" />
+      <TextBlock Grid.Row="17" Grid.Column="0" Text="Shelly host" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <TextBox Grid.Row="17" Grid.Column="1" Text="{Binding ShellyHost}" Margin="0,0,0,10" />
+      <TextBlock Grid.Row="18" Grid.Column="0" Text="Shelly port / switch ID" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <StackPanel Grid.Row="18" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
         <TextBox Text="{Binding ShellyPort}" Width="90" Margin="0,0,10,0" />
         <TextBox Text="{Binding ShellySwitchId}" Width="90" />
       </StackPanel>
-      <TextBlock Grid.Row="16" Grid.Column="0" Text="Off threshold watts" Margin="0,0,10,10" VerticalAlignment="Center" />
-      <TextBox Grid.Row="16" Grid.Column="1" Text="{Binding StationOffPowerThresholdWatts}" Margin="0,0,0,10" />
-      <TextBlock Grid.Row="17" Grid.Column="0" Text="Power-on delay seconds" Margin="0,0,10,10" VerticalAlignment="Center" />
-      <TextBox Grid.Row="17" Grid.Column="1" Text="{Binding StationPowerOnDelaySeconds}" Margin="0,0,0,10" />
-      <Separator Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,16" />
-      <TextBlock Grid.Row="19" Grid.Column="0" Text="Main screen" FontWeight="SemiBold" Margin="0,0,10,10" VerticalAlignment="Center" />
-      <CheckBox Grid.Row="19" Grid.Column="1" Content="Show event log" IsChecked="{Binding ShowEventLog}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="20" Grid.Column="1" Content="Show ACLog status" IsChecked="{Binding ShowAcLogStatus}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="21" Grid.Column="1" Content="Show wfview status" IsChecked="{Binding ShowWfviewStatus}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="22" Grid.Column="1" Content="Show radio frequency" IsChecked="{Binding ShowRadioFrequency}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="23" Grid.Column="1" Content="Show mode and RF power" IsChecked="{Binding ShowModeAndRfPower}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="24" Grid.Column="1" Content="Show last requested frequency" IsChecked="{Binding ShowLastRequestedFrequency}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="25" Grid.Column="1" Content="Show last confirmed frequency" IsChecked="{Binding ShowLastConfirmedFrequency}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="26" Grid.Column="1" Content="Show tune result" IsChecked="{Binding ShowTuneResult}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="27" Grid.Column="1" Content="Expand station power panel by default" IsChecked="{Binding ExpandPowerPanel}" Margin="0,0,0,10" />
-      <CheckBox Grid.Row="28" Grid.Column="1" Content="Use dark mode with red text" IsChecked="{Binding DarkModeEnabled}" Margin="0,0,0,10" />
+      <TextBlock Grid.Row="19" Grid.Column="0" Text="Off threshold watts" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <TextBox Grid.Row="19" Grid.Column="1" Text="{Binding StationOffPowerThresholdWatts}" Margin="0,0,0,10" />
+      <TextBlock Grid.Row="20" Grid.Column="0" Text="Power-on delay seconds" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <TextBox Grid.Row="20" Grid.Column="1" Text="{Binding StationPowerOnDelaySeconds}" Margin="0,0,0,10" />
+      <Separator Grid.Row="21" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,8,0,16" />
+      <TextBlock Grid.Row="22" Grid.Column="0" Text="Main screen" FontWeight="SemiBold" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <CheckBox Grid.Row="22" Grid.Column="1" Content="Show event log" IsChecked="{Binding ShowEventLog}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="23" Grid.Column="1" Content="Show ACLog status" IsChecked="{Binding ShowAcLogStatus}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="24" Grid.Column="1" Content="Show wfview status" IsChecked="{Binding ShowWfviewStatus}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="25" Grid.Column="1" Content="Show radio frequency" IsChecked="{Binding ShowRadioFrequency}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="26" Grid.Column="1" Content="Show mode and RF power" IsChecked="{Binding ShowModeAndRfPower}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="27" Grid.Column="1" Content="Show last requested frequency" IsChecked="{Binding ShowLastRequestedFrequency}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="28" Grid.Column="1" Content="Show last confirmed frequency" IsChecked="{Binding ShowLastConfirmedFrequency}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="29" Grid.Column="1" Content="Show tune result" IsChecked="{Binding ShowTuneResult}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="30" Grid.Column="1" Content="Expand station power panel by default" IsChecked="{Binding ExpandPowerPanel}" Margin="0,0,0,10" />
+      <CheckBox Grid.Row="31" Grid.Column="1" Content="Use dark mode with red text" IsChecked="{Binding DarkModeEnabled}" Margin="0,0,0,10" />
     </Grid>
     </ScrollViewer>
 

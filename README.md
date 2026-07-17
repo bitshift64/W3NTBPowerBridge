@@ -25,6 +25,7 @@ More remote-access detail is available in [Remote Access and Tailscale Notes](do
 - Shows a persistent **ON AIR** indicator that lights red only when wfview positively reports transmit is active.
 - Updates ACLog's band, mode, and frequency fields from wfview so ACLog tracks radio changes made in wfview.
 - Optionally updates ACLog's log-entry Power field from wfview's read-only RF power level.
+- Can run a configurable command to launch or restart the shack-side wfview server.
 - Optionally monitors and controls a Shelly Gen 4 plug for station power.
 - Provides a compact operator-friendly main window with configurable status panels and optional event log.
 - Reconnects both TCP clients automatically after disconnects.
@@ -77,6 +78,28 @@ The installer does not require administrator rights and includes the .NET runtim
 5. Click **Connect All**.
 
 The app can also launch wfview and ACLog if you configure the executable paths. A sample configuration is available at `samples/settings.sample.json`.
+
+## Launching the shack-side wfview server
+
+If the radio power supply is turned off, the shack-side wfview server may lose the radio's COM port and may need to be restarted after station power comes back. W3NTB Power Bridge includes a **Launch Server** button for this situation.
+
+The button runs the command configured in **Settings**:
+
+- **Server command**: the program to run on the remote operating computer, such as `ssh.exe`.
+- **Server arguments**: the arguments for that command, such as a Tailscale SSH command that restarts wfview on the shack computer.
+- **Launch server during Start Station**: runs the server command automatically after station power-on delay and before launching the local wfview client and ACLog.
+
+Example using SSH over Tailscale:
+
+```text
+Server command:
+ssh.exe
+
+Server arguments:
+shack-pc "powershell -NoProfile -Command \"Stop-Process -Name wfview -Force -ErrorAction SilentlyContinue; Start-Process 'C:\Program Files (x86)\wfview\wfview.exe'\""
+```
+
+Adjust the computer name and wfview path to match the shack computer. This feature does not open network ports by itself; it assumes your chosen remote command method is already configured and working.
 
 ## Tailscale and remote access notes
 

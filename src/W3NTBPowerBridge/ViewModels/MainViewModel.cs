@@ -62,6 +62,7 @@ public sealed class MainViewModel : ObservableObject
         RefreshShellyCommand = new RelayCommand(_ => RefreshShellyAsync());
         PowerOnCommand = new RelayCommand(_ => SetStationPowerAsync(true));
         PowerOffCommand = new RelayCommand(_ => SetStationPowerAsync(false));
+        LaunchServerCommand = new RelayCommand(_ => LaunchServerAsync());
         OpenWfviewCommand = new RelayCommand(_ => OpenWfviewAsync());
         OpenAcLogCommand = new RelayCommand(_ => OpenAcLogAsync());
         ClearLogCommand = new RelayCommand(_ => ClearLogAsync());
@@ -283,6 +284,11 @@ public sealed class MainViewModel : ObservableObject
     public ICommand PowerOffCommand { get; }
 
     /// <summary>
+    /// Gets the command that launches or restarts the shack-side wfview server.
+    /// </summary>
+    public ICommand LaunchServerCommand { get; }
+
+    /// <summary>
     /// Gets the command that launches wfview.
     /// </summary>
     public ICommand OpenWfviewCommand { get; }
@@ -381,6 +387,13 @@ public sealed class MainViewModel : ObservableObject
             _logger.Info("Shelly station power integration is disabled; skipping power-on step.");
         }
 
+        if (_settings.LaunchWfviewServerDuringStartStation)
+        {
+            StationStartupStatus = "Launching shack wfview server.";
+            _processLauncher.LaunchWfviewServer(_settings);
+            await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+        }
+
         StationStartupStatus = "Launching station apps.";
         _processLauncher.LaunchWfview(_settings);
         _processLauncher.LaunchAcLog(_settings);
@@ -404,6 +417,12 @@ public sealed class MainViewModel : ObservableObject
     private Task OpenWfviewAsync()
     {
         _processLauncher.LaunchWfview(_settings);
+        return Task.CompletedTask;
+    }
+
+    private Task LaunchServerAsync()
+    {
+        _processLauncher.LaunchWfviewServer(_settings);
         return Task.CompletedTask;
     }
 

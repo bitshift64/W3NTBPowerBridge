@@ -36,6 +36,16 @@ public sealed class AppSettings
     public string AcLogPath { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the command used to launch or restart the shack-side wfview server.
+    /// </summary>
+    public string WfviewServerLaunchCommand { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets arguments passed to the shack-side wfview server launch command.
+    /// </summary>
+    public string WfviewServerLaunchArguments { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets a value indicating whether both TCP services should connect on startup.
     /// </summary>
     public bool AutoConnectOnStartup { get; set; } = true;
@@ -54,6 +64,11 @@ public sealed class AppSettings
     /// Gets or sets a value indicating whether ACLog should launch when the application starts.
     /// </summary>
     public bool AutoLaunchAcLog { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the full station startup sequence should launch the shack-side wfview server.
+    /// </summary>
+    public bool LaunchWfviewServerDuringStartStation { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether read-only RF power from wfview should update ACLog's power field.

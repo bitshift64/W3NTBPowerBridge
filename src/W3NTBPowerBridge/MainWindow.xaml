@@ -103,6 +103,7 @@
       <Button Content="Refresh Power" Command="{Binding RefreshShellyCommand}" Visibility="{Binding ShellyControlsVisibility}" />
       <Button Content="Power On" Command="{Binding PowerOnCommand}" Visibility="{Binding ShellyControlsVisibility}" />
       <Button Content="Power Off" Command="{Binding PowerOffCommand}" Visibility="{Binding ShellyControlsVisibility}" />
+      <Button Content="Launch Server" Command="{Binding LaunchServerCommand}" />
       <Button Content="Open wfview" Command="{Binding OpenWfviewCommand}" />
       <Button Content="Open ACLog" Command="{Binding OpenAcLogCommand}" />
       <Button Content="Clear Log" Command="{Binding ClearLogCommand}" Visibility="{Binding EventLogVisibility}" />

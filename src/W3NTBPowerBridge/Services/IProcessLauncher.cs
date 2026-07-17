@@ -18,4 +18,10 @@ public interface IProcessLauncher
     /// </summary>
     /// <param name="settings">Current settings.</param>
     void LaunchAcLog(AppSettings settings);
+
+    /// <summary>
+    /// Runs the configured command that starts or restarts the shack-side wfview server.
+    /// </summary>
+    /// <param name="settings">Current settings.</param>
+    void LaunchWfviewServer(AppSettings settings);
 }

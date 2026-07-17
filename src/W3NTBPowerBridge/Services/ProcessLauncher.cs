@@ -32,6 +32,12 @@ public sealed class ProcessLauncher : IProcessLauncher
         Launch(settings.AcLogPath, "ACLog");
     }
 
+    /// <inheritdoc />
+    public void LaunchWfviewServer(AppSettings settings)
+    {
+        LaunchCommand(settings.WfviewServerLaunchCommand, settings.WfviewServerLaunchArguments, "wfview server");
+    }
+
     private void Launch(string path, string name)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -54,6 +60,29 @@ public sealed class ProcessLauncher : IProcessLauncher
         catch (Exception exception)
         {
             _logger.Error($"Failed to launch {name}", exception);
+        }
+    }
+
+    private void LaunchCommand(string command, string arguments, string name)
+    {
+        if (string.IsNullOrWhiteSpace(command))
+        {
+            _logger.Info($"{name} launch command is not configured.");
+            return;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(command, arguments)
+            {
+                UseShellExecute = false,
+                CreateNoWindow = true
+            });
+            _logger.Info($"Launched {name} command.");
+        }
+        catch (Exception exception)
+        {
+            _logger.Error($"Failed to launch {name} command", exception);
         }
     }
 }
