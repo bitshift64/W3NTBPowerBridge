@@ -57,6 +57,7 @@ public sealed class MainViewModel : ObservableObject
         _acLogClient.ModeRequested += OnModeRequested;
 
         StartStationCommand = new RelayCommand(_ => StartStationAsync());
+        StopStationCommand = new RelayCommand(_ => StopStationAsync());
         ConnectAllCommand = new RelayCommand(_ => ConnectAllAsync());
         DisconnectAllCommand = new RelayCommand(_ => DisconnectAllAsync());
         RefreshShellyCommand = new RelayCommand(_ => RefreshShellyAsync());
@@ -259,6 +260,11 @@ public sealed class MainViewModel : ObservableObject
     public ICommand StartStationCommand { get; }
 
     /// <summary>
+    /// Gets the command that disconnects services, closes apps, stops the shack server, and powers off the station.
+    /// </summary>
+    public ICommand StopStationCommand { get; }
+
+    /// <summary>
     /// Gets the command that starts both TCP connections.
     /// </summary>
     public ICommand ConnectAllCommand { get; }
@@ -377,8 +383,8 @@ public sealed class MainViewModel : ObservableObject
             var delaySeconds = Math.Clamp(_settings.StationPowerOnDelaySeconds, 0, 60);
             if (delaySeconds > 0)
             {
-                StationStartupStatus = $"Waiting {delaySeconds} seconds for station power to settle.";
-                _logger.Info($"Waiting {delaySeconds} seconds after station power on.");
+                StationStartupStatus = $"Waiting {delaySeconds} seconds after power-on confirmation.";
+                _logger.Info($"Waiting {delaySeconds} seconds after station power confirmation.");
                 await Task.Delay(TimeSpan.FromSeconds(delaySeconds)).ConfigureAwait(false);
             }
         }
@@ -390,12 +396,35 @@ public sealed class MainViewModel : ObservableObject
         if (_settings.LaunchWfviewServerDuringStartStation)
         {
             StationStartupStatus = "Launching shack wfview server.";
-            _processLauncher.LaunchWfviewServer(_settings);
-            await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+            var serverStarted = await _processLauncher.LaunchWfviewServerAsync(_settings).ConfigureAwait(false);
+            if (serverStarted)
+            {
+                var serverSettleSeconds = Math.Clamp(_settings.WfviewServerSettleDelaySeconds, 0, 60);
+                if (serverSettleSeconds > 0)
+                {
+                    StationStartupStatus = $"Waiting {serverSettleSeconds} seconds after shack server launch.";
+                    _logger.Info($"Waiting {serverSettleSeconds} seconds after shack wfview server launch.");
+                    await Task.Delay(TimeSpan.FromSeconds(serverSettleSeconds)).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                StationStartupStatus = "Shack wfview server launch did not confirm.";
+                _logger.Error("Full station sequence continuing after shack wfview server launch did not confirm.");
+            }
         }
 
-        StationStartupStatus = "Launching station apps.";
+        StationStartupStatus = "Launching local wfview.";
         _processLauncher.LaunchWfview(_settings);
+
+        var acLogLaunchDelaySeconds = Math.Clamp(_settings.AcLogLaunchDelaySeconds, 0, 30);
+        if (acLogLaunchDelaySeconds > 0)
+        {
+            StationStartupStatus = $"Waiting {acLogLaunchDelaySeconds} seconds before ACLog launch.";
+            await Task.Delay(TimeSpan.FromSeconds(acLogLaunchDelaySeconds)).ConfigureAwait(false);
+        }
+
+        StationStartupStatus = "Launching ACLog.";
         _processLauncher.LaunchAcLog(_settings);
 
         StationStartupStatus = "Connecting station services.";
@@ -404,6 +433,74 @@ public sealed class MainViewModel : ObservableObject
 
         StationStartupStatus = "Station startup sequence complete.";
         _logger.Info("Full station sequence complete.");
+    }
+
+    private async Task StopStationAsync()
+    {
+        var result = MessageBox.Show(
+            "Shut down the station sequence? This will disconnect services, close station apps, stop the shack wfview server, and power off the Shelly-controlled supply if enabled.",
+            "Confirm Station Shutdown",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+        if (result != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        StationStartupStatus = "Stopping station...";
+        _logger.Info("Starting full station shutdown sequence.");
+
+        StationStartupStatus = "Disconnecting station services.";
+        await DisconnectAllAsync().ConfigureAwait(false);
+
+        StationStartupStatus = "Closing ACLog.";
+        _processLauncher.CloseAcLog();
+
+        var acLogLaunchDelaySeconds = Math.Clamp(_settings.AcLogLaunchDelaySeconds, 0, 30);
+        if (acLogLaunchDelaySeconds > 0)
+        {
+            StationStartupStatus = $"Waiting {acLogLaunchDelaySeconds} seconds before closing wfview.";
+            await Task.Delay(TimeSpan.FromSeconds(acLogLaunchDelaySeconds)).ConfigureAwait(false);
+        }
+
+        StationStartupStatus = "Closing local wfview.";
+        _processLauncher.CloseWfview();
+
+        if (_settings.LaunchWfviewServerDuringStartStation)
+        {
+            StationStartupStatus = "Stopping shack wfview server.";
+            var serverStopped = await _processLauncher.StopWfviewServerAsync(_settings).ConfigureAwait(false);
+            if (serverStopped)
+            {
+                var serverSettleSeconds = Math.Clamp(_settings.WfviewServerSettleDelaySeconds, 0, 60);
+                if (serverSettleSeconds > 0)
+                {
+                    StationStartupStatus = $"Waiting {serverSettleSeconds} seconds after shack server stop.";
+                    _logger.Info($"Waiting {serverSettleSeconds} seconds after shack wfview server stop.");
+                    await Task.Delay(TimeSpan.FromSeconds(serverSettleSeconds)).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                StationStartupStatus = "Shack wfview server stop did not confirm.";
+                _logger.Error("Full station shutdown continuing after shack wfview server stop did not confirm.");
+            }
+        }
+
+        if (_settings.ShellyEnabled)
+        {
+            StationStartupStatus = "Turning station power off.";
+            var status = await _shellyPowerService.SetPowerAsync(_settings, false).ConfigureAwait(false);
+            await Application.Current.Dispatcher.InvokeAsync(() => ApplyShellyStatus(status));
+            await ConfirmStationOffAsync().ConfigureAwait(false);
+        }
+        else
+        {
+            _logger.Info("Shelly station power integration is disabled; skipping power-off step.");
+        }
+
+        StationStartupStatus = "Station shutdown sequence complete.";
+        _logger.Info("Full station shutdown sequence complete.");
     }
 
     private Task DisconnectAllAsync()
@@ -420,10 +517,9 @@ public sealed class MainViewModel : ObservableObject
         return Task.CompletedTask;
     }
 
-    private Task LaunchServerAsync()
+    private async Task LaunchServerAsync()
     {
-        _processLauncher.LaunchWfviewServer(_settings);
-        return Task.CompletedTask;
+        await _processLauncher.LaunchWfviewServerAsync(_settings).ConfigureAwait(false);
     }
 
     private async Task RefreshShellyAsync()

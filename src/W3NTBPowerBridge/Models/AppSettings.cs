@@ -108,7 +108,22 @@ public sealed class AppSettings
     /// <summary>
     /// Gets or sets the delay after station power-on before launching apps and connecting services.
     /// </summary>
-    public int StationPowerOnDelaySeconds { get; set; } = 5;
+    public int StationPowerOnDelaySeconds { get; set; } = 8;
+
+    /// <summary>
+    /// Gets or sets the maximum time the shack computer waits for USB audio devices before launching wfview.
+    /// </summary>
+    public int WfviewServerAudioWaitSeconds { get; set; } = 45;
+
+    /// <summary>
+    /// Gets or sets the delay after the shack-side wfview server launch confirms before local apps are opened.
+    /// </summary>
+    public int WfviewServerSettleDelaySeconds { get; set; } = 8;
+
+    /// <summary>
+    /// Gets or sets the delay after launching local wfview before launching ACLog.
+    /// </summary>
+    public int AcLogLaunchDelaySeconds { get; set; } = 2;
 
     /// <summary>
     /// Gets or sets a value indicating whether the event log is shown on the main window.

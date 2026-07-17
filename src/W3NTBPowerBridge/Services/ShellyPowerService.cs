@@ -70,7 +70,8 @@ public sealed class ShellyPowerService
             var uri = BuildUri(settings, "Switch.Set", $"id={settings.ShellySwitchId}&on={turnOn.ToString().ToLowerInvariant()}");
             _ = await HttpClient.GetStringAsync(uri).ConfigureAwait(false);
             _logger.Info($"Shelly station power command sent: {commandName}.");
-            return await GetStatusAsync(settings).ConfigureAwait(false);
+
+            return await WaitForOutputStateAsync(settings, turnOn).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -89,6 +90,11 @@ public sealed class ShellyPowerService
     {
         using var document = JsonDocument.Parse(json);
         var root = document.RootElement;
+        if (root.TryGetProperty("params", out var parameters) && parameters.ValueKind == JsonValueKind.Object)
+        {
+            root = parameters;
+        }
+
         var outputOn = ReadBoolean(root, "output");
         var powerWatts = ReadDouble(root, "apower");
         var voltage = ReadDouble(root, "voltage");
@@ -105,9 +111,41 @@ public sealed class ShellyPowerService
         return new ShellyPowerStatus(true, true, outputOn, powerWatts, voltage, current, frequency, stationOffConfirmed, message);
     }
 
+    private async Task<ShellyPowerStatus> WaitForOutputStateAsync(AppSettings settings, bool expectedOn)
+    {
+        ShellyPowerStatus status = ShellyPowerStatus.Disabled;
+        for (var attempt = 0; attempt < 10; attempt++)
+        {
+            status = await GetStatusAsync(settings).ConfigureAwait(false);
+            if (status.OutputOn == expectedOn)
+            {
+                return status;
+            }
+
+            await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
+        }
+
+        var expected = expectedOn ? "on" : "off";
+        var message = $"Shelly command sent, but relay did not confirm {expected}. Last status: {status.Message}";
+        _logger.Error(message);
+
+        return status with { Message = message };
+    }
+
     private static Uri BuildUri(AppSettings settings, string method, string query)
     {
-        var builder = new UriBuilder("http", settings.ShellyHost, settings.ShellyPort)
+        var host = settings.ShellyHost.Trim();
+        var scheme = "http";
+        var port = settings.ShellyPort;
+
+        if (Uri.TryCreate(host, UriKind.Absolute, out var configuredUri))
+        {
+            scheme = configuredUri.Scheme;
+            host = configuredUri.Host;
+            port = configuredUri.IsDefaultPort ? settings.ShellyPort : configuredUri.Port;
+        }
+
+        var builder = new UriBuilder(scheme, host, port)
         {
             Path = $"/rpc/{method}",
             Query = query

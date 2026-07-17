@@ -98,6 +98,7 @@
 
     <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,10">
       <Button Content="Start Station" Command="{Binding StartStationCommand}" MinWidth="120" />
+      <Button Content="Stop Station" Command="{Binding StopStationCommand}" MinWidth="120" />
       <Button Content="Connect All" Command="{Binding ConnectAllCommand}" />
       <Button Content="Disconnect All" Command="{Binding DisconnectAllCommand}" />
       <Button Content="Refresh Power" Command="{Binding RefreshShellyCommand}" Visibility="{Binding ShellyControlsVisibility}" />

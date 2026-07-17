@@ -34,6 +34,34 @@ public sealed class ShellyPowerServiceTests
     }
 
     [TestMethod]
+    public void ParseStatus_JsonRpcWrappedStatus_ReturnsElectricalValues()
+    {
+        const string json = """
+            {
+              "id": 1,
+              "src": "shellyplugusg4-123456789abc",
+              "params": {
+                "id": 0,
+                "output": true,
+                "apower": 12.3,
+                "voltage": 120.8,
+                "current": 0.10,
+                "freq": 60
+              }
+            }
+            """;
+
+        var status = ShellyPowerService.ParseStatus(json, 5.0);
+
+        Assert.IsTrue(status.IsReachable);
+        Assert.AreEqual(true, status.OutputOn);
+        Assert.AreEqual(12.3, status.PowerWatts);
+        Assert.AreEqual(120.8, status.Voltage);
+        Assert.AreEqual(0.10, status.CurrentAmps);
+        Assert.AreEqual(60.0, status.FrequencyHz);
+    }
+
+    [TestMethod]
     public void ParseStatus_LowPowerOnRelay_ConfirmsStationOff()
     {
         const string json = """

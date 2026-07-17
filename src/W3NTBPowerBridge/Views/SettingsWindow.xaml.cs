@@ -1,5 +1,6 @@
 using System.Windows;
 using W3NTBPowerBridge.Models;
+using W3NTBPowerBridge.Services;
 
 namespace W3NTBPowerBridge.Views;
 
@@ -37,6 +38,9 @@ public partial class SettingsWindow : Window
             ShellySwitchId = settings.ShellySwitchId,
             StationOffPowerThresholdWatts = settings.StationOffPowerThresholdWatts,
             StationPowerOnDelaySeconds = settings.StationPowerOnDelaySeconds,
+            WfviewServerAudioWaitSeconds = settings.WfviewServerAudioWaitSeconds,
+            WfviewServerSettleDelaySeconds = settings.WfviewServerSettleDelaySeconds,
+            AcLogLaunchDelaySeconds = settings.AcLogLaunchDelaySeconds,
             ShowEventLog = settings.ShowEventLog,
             ShowAcLogStatus = settings.ShowAcLogStatus,
             ShowWfviewStatus = settings.ShowWfviewStatus,
@@ -51,6 +55,7 @@ public partial class SettingsWindow : Window
 
         InitializeComponent();
         DataContext = Settings;
+        SourceInitialized += (_, _) => ThemeService.ApplyWindowFrame(this, Settings.DarkModeEnabled);
     }
 
     /// <summary>

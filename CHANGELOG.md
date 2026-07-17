@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Hardens Shelly power control by confirming relay state after on/off commands and accepting wrapped RPC status responses.
+- Adds adjustable station startup timing for power-on delay, shack server audio readiness, server settle time, and ACLog launch delay.
+- Waits for shack-side USB Audio CODEC endpoints before launching the wfview server.
+- Adds a Stop Station sequence that disconnects services, closes local apps, stops the shack wfview server, and powers off Shelly-controlled station power.
+- Reorganizes Settings into Connections, Startup, Power, and Display tabs.
+- Improves Settings dark mode styling for tabs and window frame borders.
+
 ## 0.1.1-beta
 
 - Adds optional RF power sync from wfview into ACLog's Power field using a configurable max-watts scale.

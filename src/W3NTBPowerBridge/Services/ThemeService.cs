@@ -58,6 +58,16 @@ public static class ThemeService
         ApplyWindowFrameTheme(darkModeEnabled);
     }
 
+    /// <summary>
+    /// Applies the selected Windows frame theme to a specific window.
+    /// </summary>
+    /// <param name="window">Window to style.</param>
+    /// <param name="darkModeEnabled">True to use the dark red operator frame.</param>
+    public static void ApplyWindowFrame(Window window, bool darkModeEnabled)
+    {
+        ApplyWindowFrameToWindow(window, darkModeEnabled);
+    }
+
     private static void SetBrush(string key, string color)
     {
         Application.Current.Resources[key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
@@ -71,6 +81,11 @@ public static class ThemeService
             return;
         }
 
+        ApplyWindowFrameToWindow(window, darkModeEnabled);
+    }
+
+    private static void ApplyWindowFrameToWindow(Window window, bool darkModeEnabled)
+    {
         var handle = new WindowInteropHelper(window).Handle;
         if (handle == IntPtr.Zero)
         {
