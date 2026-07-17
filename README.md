@@ -119,6 +119,7 @@ Dark mode is available for night operating and uses a black background with red 
 The test project covers:
 
 - `CHANGEFREQ` XML parsing
+- `READBMFRESPONSE` startup sync parsing
 - MHz-to-Hz conversion
 - duplicate command suppression
 - Hamlib frequency response parsing
@@ -158,3 +159,7 @@ For station-control issues, it also helps to include:
 ## Current proof-of-concept scope
 
 This version focuses on the ACLog-to-wfview bridge, station status, launching companion apps, settings, and logging. Shelly-controlled station power is included as a beta optional integration.
+
+## License
+
+W3NTB Power Bridge is released under the MIT License. See [LICENSE](LICENSE).
