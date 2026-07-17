@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1-beta
+
+- Adds optional RF power sync from wfview into ACLog's Power field using a configurable max-watts scale.
+- Adds Launch Server support for restarting shack-side wfview through SSH and a logged-in-user Scheduled Task.
+- Simplifies server restart setup to a server IP/host and standard wfview path instead of free-form commands.
+- Improves logging for remote wfview server restart results.
+- Adds explicit ACLog `READBMFRESPONSE` startup sync parsing.
+
 ## 0.1.0-beta
 
 - Renamed the app and solution to W3NTB Power Bridge.

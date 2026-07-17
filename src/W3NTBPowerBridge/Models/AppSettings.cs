@@ -36,14 +36,14 @@ public sealed class AppSettings
     public string AcLogPath { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the command used to launch or restart the shack-side wfview server.
+    /// Gets or sets the shack-side computer IP address or host name used for restarting wfview server.
     /// </summary>
-    public string WfviewServerLaunchCommand { get; set; } = string.Empty;
+    public string WfviewServerHost { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets arguments passed to the shack-side wfview server launch command.
+    /// Gets or sets the expected wfview.exe path on the shack-side computer.
     /// </summary>
-    public string WfviewServerLaunchArguments { get; set; } = string.Empty;
+    public string WfviewServerPath { get; set; } = @"C:\Program Files\wfview\wfview.exe";
 
     /// <summary>
     /// Gets or sets a value indicating whether both TCP services should connect on startup.

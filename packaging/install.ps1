@@ -68,7 +68,7 @@ if (-not $NoDesktopShortcut) {
 $uninstallKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$appId"
 New-Item -Path $uninstallKey -Force | Out-Null
 Set-ItemProperty -Path $uninstallKey -Name "DisplayName" -Value $appName
-Set-ItemProperty -Path $uninstallKey -Name "DisplayVersion" -Value "0.1.0-beta"
+Set-ItemProperty -Path $uninstallKey -Name "DisplayVersion" -Value "0.1.1-beta"
 Set-ItemProperty -Path $uninstallKey -Name "Publisher" -Value "W3NTB"
 Set-ItemProperty -Path $uninstallKey -Name "DisplayIcon" -Value $exePath
 Set-ItemProperty -Path $uninstallKey -Name "InstallLocation" -Value $installDir

@@ -86,10 +86,10 @@
       <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding WfviewPath}" Margin="0,0,0,10" />
       <TextBlock Grid.Row="5" Grid.Column="0" Text="ACLog.exe path" Margin="0,0,10,10" VerticalAlignment="Center" />
       <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding AcLogPath}" Margin="0,0,0,10" />
-      <TextBlock Grid.Row="6" Grid.Column="0" Text="Server command" Margin="0,0,10,10" VerticalAlignment="Center" />
-      <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding WfviewServerLaunchCommand}" Margin="0,0,0,10" />
-      <TextBlock Grid.Row="7" Grid.Column="0" Text="Server arguments" Margin="0,0,10,10" VerticalAlignment="Center" />
-      <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding WfviewServerLaunchArguments}" Margin="0,0,0,10" />
+      <TextBlock Grid.Row="6" Grid.Column="0" Text="Server IP / host" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding WfviewServerHost}" Margin="0,0,0,10" />
+      <TextBlock Grid.Row="7" Grid.Column="0" Text="Server wfview path" Margin="0,0,10,10" VerticalAlignment="Center" />
+      <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding WfviewServerPath}" Margin="0,0,0,10" />
       <CheckBox Grid.Row="8" Grid.Column="1" Content="Connect automatically on startup" IsChecked="{Binding AutoConnectOnStartup}" Margin="0,0,0,10" />
       <CheckBox Grid.Row="9" Grid.Column="1" Content="Launch wfview automatically" IsChecked="{Binding AutoLaunchWfview}" Margin="0,0,0,10" />
       <CheckBox Grid.Row="10" Grid.Column="1" Content="Launch ACLog automatically" IsChecked="{Binding AutoLaunchAcLog}" Margin="0,0,0,10" />

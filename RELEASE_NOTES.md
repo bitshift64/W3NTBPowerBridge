@@ -1,6 +1,6 @@
-# W3NTB Power Bridge 0.1.0-beta
+# W3NTB Power Bridge 0.1.1-beta
 
-First shareable beta release.
+Beta update with RF power logging sync and shack-side wfview server restart support.
 
 ## Highlights
 
@@ -8,6 +8,8 @@ First shareable beta release.
 - Sends ACLog frequency requests to wfview rigctld and confirms the result.
 - Tracks radio frequency and mode changes from wfview back into ACLog.
 - Displays read-only ON AIR status from wfview/Hamlib PTT state.
+- Optionally syncs wfview RF power into ACLog's Power field using a configurable max-watts scale.
+- Can restart shack-side wfview over SSH using the configured server IP/host and wfview path.
 - Includes compact UI options and dark mode for operating use.
 - Includes optional Shelly Gen 4 station power control as beta.
 - Ships as a self-contained Windows x64 installer ZIP.
@@ -17,6 +19,7 @@ First shareable beta release.
 
 - Shelly station power control is beta and should be tested carefully before relying on it.
 - The app does not send PTT, transmit, or radio power commands.
+- Launch Server requires passwordless SSH to the shack computer and starts wfview through a logged-in-user Scheduled Task.
 - No administrator rights are required for the installer ZIP.
 - Tailscale is optional and is configured separately; W3NTB Power Bridge normally talks to ACLog and the local wfview client on `127.0.0.1`.
 - Remote access and Shelly-over-Tailscale setup notes are documented in `docs/REMOTE_ACCESS.md`.

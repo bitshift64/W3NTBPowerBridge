@@ -10,8 +10,8 @@
     <RootNamespace>W3NTBPowerBridge</RootNamespace>
     <Product>W3NTB Power Bridge</Product>
     <Company>W3NTB</Company>
-    <Version>0.1.0</Version>
-    <InformationalVersion>0.1.0-beta</InformationalVersion>
+    <Version>0.1.1</Version>
+    <InformationalVersion>0.1.1-beta</InformationalVersion>
     <Description>Remote station power and N3FJP-to-wfview bridge for W3NTB.</Description>
     <ApplicationIcon>Assets\w3ntb-power-bridge.ico</ApplicationIcon>
   </PropertyGroup>

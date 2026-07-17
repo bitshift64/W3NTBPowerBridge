@@ -59,7 +59,7 @@ dotnet test
 
 ## Install from release package
 
-For normal testing, use the installer ZIP from `artifacts/installer/W3NTBPowerBridge-0.1.0-beta-Installer.zip`.
+For normal testing, use the installer ZIP from `artifacts/installer/W3NTBPowerBridge-0.1.1-beta-Installer.zip`.
 
 1. Extract the ZIP.
 2. Run `install.cmd`.
@@ -83,23 +83,17 @@ The app can also launch wfview and ACLog if you configure the executable paths. 
 
 If the radio power supply is turned off, the shack-side wfview server may lose the radio's COM port and may need to be restarted after station power comes back. W3NTB Power Bridge includes a **Launch Server** button for this situation.
 
-The button runs the command configured in **Settings**:
+The button uses SSH from the remote operating computer to the shack computer. In **Settings**, configure:
 
-- **Server command**: the program to run on the remote operating computer, such as `ssh.exe`.
-- **Server arguments**: the arguments for that command, such as a Tailscale SSH command that restarts wfview on the shack computer.
-- **Launch server during Start Station**: runs the server command automatically after station power-on delay and before launching the local wfview client and ACLog.
+- **Server IP / host**: the shack computer's Tailscale IP address or host name.
+- **Server wfview path**: the wfview executable path on the shack computer. The default is `C:\Program Files\wfview\wfview.exe`.
+- **Launch server during Start Station**: restarts the shack-side wfview server automatically after station power-on delay and before launching the local wfview client and ACLog.
 
-Example using SSH over Tailscale:
+When triggered, the app connects by SSH, creates or updates a logged-in-user Scheduled Task named `W3NTB Launch wfview`, and starts that task so wfview opens in the shack computer's visible desktop session rather than inside the hidden SSH service session.
 
-```text
-Server command:
-ssh.exe
+This feature does not open network ports by itself. It assumes SSH to the shack computer is already configured and working over Tailscale or another private network path.
 
-Server arguments:
-shack-pc "powershell -NoProfile -Command \"Stop-Process -Name wfview -Force -ErrorAction SilentlyContinue; Start-Process 'C:\Program Files (x86)\wfview\wfview.exe'\""
-```
-
-Adjust the computer name and wfview path to match the shack computer. This feature does not open network ports by itself; it assumes your chosen remote command method is already configured and working.
+See [Shack-Side wfview Server Restart Setup](docs/SHACK_SERVER_RESTART_SETUP.md) for the full setup checklist.
 
 ## Tailscale and remote access notes
 
