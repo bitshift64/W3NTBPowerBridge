@@ -22,8 +22,9 @@ public partial class MainWindow : Window
     {
         if (DataContext is MainViewModel viewModel)
         {
-            await viewModel.InitializeAsync();
+            await viewModel.LoadSettingsAsync();
             viewModel.RestoreWindowPlacement(this);
+            await viewModel.InitializeAsync();
         }
     }
 

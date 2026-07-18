@@ -3,7 +3,6 @@ obj/
 .vs/
 .idea/
 .agents/
-.codex/
 *.user
 *.suo
 *.userosscache

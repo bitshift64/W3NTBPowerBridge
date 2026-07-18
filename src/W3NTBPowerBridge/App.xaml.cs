@@ -9,16 +9,32 @@ namespace W3NTBPowerBridge;
 /// </summary>
 public partial class App : Application
 {
+    private Mutex? _singleInstanceMutex;
+
     /// <inheritdoc />
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
         DispatcherUnhandledException += OnDispatcherUnhandledException;
 
         try
         {
+            _singleInstanceMutex = new Mutex(true, "W3NTBPowerBridge.SingleInstance", out var createdNew);
+            if (!createdNew)
+            {
+                Shutdown();
+                return;
+            }
+
             var mainWindow = new MainWindow();
             MainWindow = mainWindow;
+
+            if (mainWindow.DataContext is ViewModels.MainViewModel viewModel)
+            {
+                await viewModel.LoadSettingsAsync().ConfigureAwait(true);
+                viewModel.RestoreWindowPlacement(mainWindow);
+            }
+
             mainWindow.Show();
         }
         catch (Exception exception)
@@ -27,6 +43,14 @@ public partial class App : Application
             MessageBox.Show(exception.ToString(), "W3NTB Power Bridge startup error", MessageBoxButton.OK, MessageBoxImage.Error);
             Shutdown(1);
         }
+    }
+
+    /// <inheritdoc />
+    protected override void OnExit(ExitEventArgs e)
+    {
+        _singleInstanceMutex?.ReleaseMutex();
+        _singleInstanceMutex?.Dispose();
+        base.OnExit(e);
     }
 
     private static void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

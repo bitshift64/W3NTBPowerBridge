@@ -36,6 +36,9 @@ public sealed class MainViewModel : ObservableObject
     private string _lastTuneResult = "No tune request yet.";
     private ShellyPowerStatus _shellyStatus = ShellyPowerStatus.Disabled;
     private string _stationStartupStatus = "Station startup has not run.";
+    private bool _stationSequenceRunning;
+    private bool _settingsLoaded;
+    private bool _initialized;
 
     /// <summary>
     /// Creates the main window view model.
@@ -315,13 +318,35 @@ public sealed class MainViewModel : ObservableObject
     public ICommand OpenSettingsCommand { get; }
 
     /// <summary>
+    /// Loads settings and applies visual preferences before startup actions run.
+    /// </summary>
+    /// <returns>A task representing the settings load.</returns>
+    public async Task LoadSettingsAsync()
+    {
+        if (_settingsLoaded)
+        {
+            return;
+        }
+
+        _settings = await _settingsService.LoadAsync().ConfigureAwait(true);
+        _settingsLoaded = true;
+        ThemeService.Apply(_settings.DarkModeEnabled);
+        OnDisplaySettingsChanged();
+    }
+
+    /// <summary>
     /// Initializes settings and optional startup actions.
     /// </summary>
     /// <returns>A task representing initialization.</returns>
     public async Task InitializeAsync()
     {
-        _settings = await _settingsService.LoadAsync().ConfigureAwait(true);
-        ThemeService.Apply(_settings.DarkModeEnabled);
+        if (_initialized)
+        {
+            return;
+        }
+
+        await LoadSettingsAsync().ConfigureAwait(true);
+        _initialized = true;
         _logger.Info("Application started.");
 
         if (_settings.AutoStartStationOnStartup)
@@ -449,6 +474,15 @@ public sealed class MainViewModel : ObservableObject
 
     private async Task StartStationAsync()
     {
+        if (_stationSequenceRunning)
+        {
+            _logger.Info("Station sequence is already running; start request ignored.");
+            return;
+        }
+
+        _stationSequenceRunning = true;
+        try
+        {
         StationStartupStatus = "Starting station...";
         _logger.Info("Starting full station sequence.");
 
@@ -488,7 +522,8 @@ public sealed class MainViewModel : ObservableObject
             else
             {
                 StationStartupStatus = "Shack wfview server launch did not confirm.";
-                _logger.Error("Full station sequence continuing after shack wfview server launch did not confirm.");
+                _logger.Error("Full station sequence stopped because shack wfview server launch did not confirm.");
+                return;
             }
         }
 
@@ -511,10 +546,21 @@ public sealed class MainViewModel : ObservableObject
 
         StationStartupStatus = "Station startup sequence complete.";
         _logger.Info("Full station sequence complete.");
+        }
+        finally
+        {
+            _stationSequenceRunning = false;
+        }
     }
 
     private async Task StopStationAsync()
     {
+        if (_stationSequenceRunning)
+        {
+            _logger.Info("Station sequence is already running; shutdown request ignored.");
+            return;
+        }
+
         var result = MessageBox.Show(
             "Shut down the station sequence? This will disconnect services, close station apps, stop the shack wfview server, and power off the Shelly-controlled supply if enabled.",
             "Confirm Station Shutdown",
@@ -525,6 +571,9 @@ public sealed class MainViewModel : ObservableObject
             return;
         }
 
+        _stationSequenceRunning = true;
+        try
+        {
         StationStartupStatus = "Stopping station...";
         _logger.Info("Starting full station shutdown sequence.");
 
@@ -579,6 +628,11 @@ public sealed class MainViewModel : ObservableObject
 
         StationStartupStatus = "Station shutdown sequence complete.";
         _logger.Info("Full station shutdown sequence complete.");
+        }
+        finally
+        {
+            _stationSequenceRunning = false;
+        }
     }
 
     private Task DisconnectAllAsync()
@@ -597,6 +651,12 @@ public sealed class MainViewModel : ObservableObject
 
     private async Task LaunchServerAsync()
     {
+        if (_stationSequenceRunning)
+        {
+            _logger.Info("Station sequence is already running; Launch Server request ignored.");
+            return;
+        }
+
         await _processLauncher.LaunchWfviewServerAsync(_settings).ConfigureAwait(false);
     }
 

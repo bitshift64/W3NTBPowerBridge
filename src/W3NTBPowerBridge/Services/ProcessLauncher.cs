@@ -10,6 +10,7 @@ namespace W3NTBPowerBridge.Services;
 /// </summary>
 public sealed class ProcessLauncher : IProcessLauncher
 {
+    private const int ServerStopTimeoutSeconds = 30;
     private readonly IAppLogger _logger;
 
     /// <summary>
@@ -163,7 +164,7 @@ public sealed class ProcessLauncher : IProcessLauncher
 
         try
         {
-            var process = Process.Start(new ProcessStartInfo("ssh.exe", $"{host} powershell.exe -NoProfile -EncodedCommand {encodedCommand}")
+            var process = Process.Start(new ProcessStartInfo("ssh.exe", $"-o ConnectTimeout=10 -o BatchMode=yes {host} powershell.exe -NoProfile -EncodedCommand {encodedCommand}")
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -177,7 +178,7 @@ public sealed class ProcessLauncher : IProcessLauncher
             }
 
             _logger.Info($"Requested wfview server restart on {host}.");
-            return await LogServerLaunchResultAsync(process, host).ConfigureAwait(false);
+            return await LogServerLaunchResultAsync(process, host, safeAudioWaitSeconds + 30).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -209,7 +210,7 @@ public sealed class ProcessLauncher : IProcessLauncher
 
         try
         {
-            var process = Process.Start(new ProcessStartInfo("ssh.exe", $"{host} powershell.exe -NoProfile -EncodedCommand {encodedCommand}")
+            var process = Process.Start(new ProcessStartInfo("ssh.exe", $"-o ConnectTimeout=10 -o BatchMode=yes {host} powershell.exe -NoProfile -EncodedCommand {encodedCommand}")
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -223,7 +224,7 @@ public sealed class ProcessLauncher : IProcessLauncher
             }
 
             _logger.Info($"Requested wfview server stop on {host}.");
-            return await LogServerStopResultAsync(process, host).ConfigureAwait(false);
+            return await LogServerStopResultAsync(process, host, ServerStopTimeoutSeconds).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -232,13 +233,18 @@ public sealed class ProcessLauncher : IProcessLauncher
         }
     }
 
-    private async Task<bool> LogServerLaunchResultAsync(Process process, string host)
+    private async Task<bool> LogServerLaunchResultAsync(Process process, string host, int timeoutSeconds)
     {
         try
         {
             var outputTask = process.StandardOutput.ReadToEndAsync();
             var errorTask = process.StandardError.ReadToEndAsync();
-            await process.WaitForExitAsync().ConfigureAwait(false);
+            if (!await WaitForExitOrKillAsync(process, timeoutSeconds).ConfigureAwait(false))
+            {
+                _logger.Error($"wfview server restart timed out on {host} after {timeoutSeconds} seconds.");
+                return false;
+            }
+
             var output = (await outputTask.ConfigureAwait(false)).Trim();
             var error = (await errorTask.ConfigureAwait(false)).Trim();
 
@@ -264,13 +270,18 @@ public sealed class ProcessLauncher : IProcessLauncher
         }
     }
 
-    private async Task<bool> LogServerStopResultAsync(Process process, string host)
+    private async Task<bool> LogServerStopResultAsync(Process process, string host, int timeoutSeconds)
     {
         try
         {
             var outputTask = process.StandardOutput.ReadToEndAsync();
             var errorTask = process.StandardError.ReadToEndAsync();
-            await process.WaitForExitAsync().ConfigureAwait(false);
+            if (!await WaitForExitOrKillAsync(process, timeoutSeconds).ConfigureAwait(false))
+            {
+                _logger.Error($"wfview server stop timed out on {host} after {timeoutSeconds} seconds.");
+                return false;
+            }
+
             var output = (await outputTask.ConfigureAwait(false)).Trim();
             var error = (await errorTask.ConfigureAwait(false)).Trim();
 
@@ -293,6 +304,32 @@ public sealed class ProcessLauncher : IProcessLauncher
         finally
         {
             process.Dispose();
+        }
+    }
+
+    private static async Task<bool> WaitForExitOrKillAsync(Process process, int timeoutSeconds)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(Math.Clamp(timeoutSeconds, 5, 180)));
+        try
+        {
+            await process.WaitForExitAsync(timeout.Token).ConfigureAwait(false);
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            try
+            {
+                if (!process.HasExited)
+                {
+                    process.Kill(entireProcessTree: true);
+                }
+            }
+            catch
+            {
+                // Best-effort cleanup after a stuck SSH command.
+            }
+
+            return false;
         }
     }
 }
