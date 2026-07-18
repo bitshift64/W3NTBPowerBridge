@@ -174,4 +174,29 @@ public sealed class AppSettings
     /// Gets or sets a value indicating whether dark mode is enabled.
     /// </summary>
     public bool DarkModeEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets the saved main window left coordinate.
+    /// </summary>
+    public double? MainWindowLeft { get; set; }
+
+    /// <summary>
+    /// Gets or sets the saved main window top coordinate.
+    /// </summary>
+    public double? MainWindowTop { get; set; }
+
+    /// <summary>
+    /// Gets or sets the saved main window width.
+    /// </summary>
+    public double? MainWindowWidth { get; set; }
+
+    /// <summary>
+    /// Gets or sets the saved main window height.
+    /// </summary>
+    public double? MainWindowHeight { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the main window was maximized.
+    /// </summary>
+    public bool MainWindowMaximized { get; set; }
 }

@@ -8,6 +8,7 @@
 - Adds a Stop Station sequence that disconnects services, closes local apps, stops the shack wfview server, and powers off Shelly-controlled station power.
 - Reorganizes Settings into Connections, Startup, Power, and Display tabs.
 - Improves Settings dark mode styling for tabs and window frame borders.
+- Remembers the main window size, screen position, and maximized state between launches.
 
 ## 0.1.1-beta
 

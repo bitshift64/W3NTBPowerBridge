@@ -350,6 +350,61 @@ public sealed class MainViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Restores the main window size and screen position from saved settings.
+    /// </summary>
+    /// <param name="window">Main application window.</param>
+    public void RestoreWindowPlacement(Window window)
+    {
+        if (!HasSavedWindowPlacement())
+        {
+            return;
+        }
+
+        var width = Math.Clamp(_settings.MainWindowWidth!.Value, window.MinWidth, SystemParameters.VirtualScreenWidth);
+        var height = Math.Clamp(_settings.MainWindowHeight!.Value, window.MinHeight, SystemParameters.VirtualScreenHeight);
+        var left = _settings.MainWindowLeft!.Value;
+        var top = _settings.MainWindowTop!.Value;
+
+        if (!IntersectsVirtualDesktop(left, top, width, height))
+        {
+            left = SystemParameters.WorkArea.Left + 40;
+            top = SystemParameters.WorkArea.Top + 40;
+        }
+
+        window.Width = width;
+        window.Height = height;
+        window.Left = left;
+        window.Top = top;
+        window.WindowStartupLocation = WindowStartupLocation.Manual;
+
+        if (_settings.MainWindowMaximized)
+        {
+            window.WindowState = WindowState.Maximized;
+        }
+    }
+
+    /// <summary>
+    /// Saves the main window size and screen position to local settings.
+    /// </summary>
+    /// <param name="window">Main application window.</param>
+    /// <returns>A task representing the save operation.</returns>
+    public async Task SaveWindowPlacementAsync(Window window)
+    {
+        var bounds = window.WindowState == WindowState.Normal ? new Rect(window.Left, window.Top, window.Width, window.Height) : window.RestoreBounds;
+        if (bounds.Width < window.MinWidth || bounds.Height < window.MinHeight)
+        {
+            return;
+        }
+
+        _settings.MainWindowLeft = bounds.Left;
+        _settings.MainWindowTop = bounds.Top;
+        _settings.MainWindowWidth = bounds.Width;
+        _settings.MainWindowHeight = bounds.Height;
+        _settings.MainWindowMaximized = window.WindowState == WindowState.Maximized;
+        await _settingsService.SaveAsync(_settings).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Stops background services before the application exits.
     /// </summary>
     /// <returns>A completed task.</returns>
@@ -359,6 +414,29 @@ public sealed class MainViewModel : ObservableObject
         _rigClient.Stop();
         _logger.Info("Application stopped.");
         return Task.CompletedTask;
+    }
+
+    private bool HasSavedWindowPlacement()
+    {
+        return _settings.MainWindowLeft.HasValue
+            && _settings.MainWindowTop.HasValue
+            && _settings.MainWindowWidth.HasValue
+            && _settings.MainWindowHeight.HasValue;
+    }
+
+    private static bool IntersectsVirtualDesktop(double left, double top, double width, double height)
+    {
+        var right = left + width;
+        var bottom = top + height;
+        var virtualLeft = SystemParameters.VirtualScreenLeft;
+        var virtualTop = SystemParameters.VirtualScreenTop;
+        var virtualRight = virtualLeft + SystemParameters.VirtualScreenWidth;
+        var virtualBottom = virtualTop + SystemParameters.VirtualScreenHeight;
+
+        return right > virtualLeft
+            && left < virtualRight
+            && bottom > virtualTop
+            && top < virtualBottom;
     }
 
     private Task ConnectAllAsync()

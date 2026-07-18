@@ -23,6 +23,7 @@ public partial class MainWindow : Window
         if (DataContext is MainViewModel viewModel)
         {
             await viewModel.InitializeAsync();
+            viewModel.RestoreWindowPlacement(this);
         }
     }
 
@@ -30,6 +31,7 @@ public partial class MainWindow : Window
     {
         if (DataContext is MainViewModel viewModel)
         {
+            await viewModel.SaveWindowPlacementAsync(this);
             await viewModel.ShutdownAsync();
         }
     }

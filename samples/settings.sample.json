@@ -32,5 +32,10 @@
   "ShowLastConfirmedFrequency": true,
   "ShowTuneResult": true,
   "ExpandPowerPanel": true,
-  "DarkModeEnabled": false
+  "DarkModeEnabled": false,
+  "MainWindowLeft": null,
+  "MainWindowTop": null,
+  "MainWindowWidth": null,
+  "MainWindowHeight": null,
+  "MainWindowMaximized": false
 }
