@@ -14,8 +14,17 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        SourceInitialized += OnSourceInitialized;
         Loaded += OnLoaded;
         Closing += OnClosing;
+    }
+
+    private void OnSourceInitialized(object? sender, EventArgs e)
+    {
+        if (DataContext is MainViewModel viewModel)
+        {
+            viewModel.ApplyWindowFrame(this);
+        }
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)

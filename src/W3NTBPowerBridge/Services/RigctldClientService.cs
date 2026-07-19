@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using W3NTBPowerBridge.Models;
@@ -15,6 +16,7 @@ public sealed class RigctldClientService
     private CancellationTokenSource? _runCts;
     private TcpClient? _client;
     private RadioState _lastState = new(null, null, null, null);
+    private bool _stopping;
 
     /// <summary>
     /// Raised when the connection state changes.
@@ -42,6 +44,7 @@ public sealed class RigctldClientService
     public void Start(AppSettings settings)
     {
         Stop();
+        _stopping = false;
         _runCts = new CancellationTokenSource();
         _ = RunAsync(settings, _runCts.Token);
     }
@@ -51,6 +54,7 @@ public sealed class RigctldClientService
     /// </summary>
     public void Stop()
     {
+        _stopping = true;
         _runCts?.Cancel();
         _runCts = null;
         _client?.Close();
@@ -155,6 +159,11 @@ public sealed class RigctldClientService
         }
         catch (Exception exception)
         {
+            if (_stopping && IsExpectedStopException(exception))
+            {
+                return new RadioState(null, null, null, null);
+            }
+
             _logger.Error("rigctld state query failed", exception);
             _client?.Close();
             return new RadioState(null, null, null, null);
@@ -202,6 +211,12 @@ public sealed class RigctldClientService
 
         StatusChanged?.Invoke(this, ServiceConnectionState.Disconnected);
         _logger.Info("wfview rigctld connection stopped.");
+    }
+
+    private static bool IsExpectedStopException(Exception exception)
+    {
+        return exception is OperationCanceledException or ObjectDisposedException or IOException
+            || exception.InnerException is ObjectDisposedException or IOException;
     }
 
     private static async Task SendLineAsync(NetworkStream stream, string command, CancellationToken cancellationToken)

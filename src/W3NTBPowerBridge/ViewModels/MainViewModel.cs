@@ -409,6 +409,15 @@ public sealed class MainViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Applies the saved theme to the native Windows frame for a window.
+    /// </summary>
+    /// <param name="window">Window whose frame should be themed.</param>
+    public void ApplyWindowFrame(Window window)
+    {
+        ThemeService.ApplyWindowFrame(window, _settings.DarkModeEnabled);
+    }
+
+    /// <summary>
     /// Saves the main window size and screen position to local settings.
     /// </summary>
     /// <param name="window">Main application window.</param>

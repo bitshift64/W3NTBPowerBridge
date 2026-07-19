@@ -11,6 +11,9 @@
 - Remembers the main window size, screen position, and maximized state between launches.
 - Applies saved display settings and main window placement before startup actions begin.
 - Adds SSH timeouts and station sequence guards for remote wfview server launch/stop operations.
+- Applies the dark Windows frame after the main window handle is created.
+- Suppresses expected rigctld poll errors during intentional shutdown.
+- Adds a quiet installer mode for scripted local installs.
 
 ## 0.1.1-beta
 

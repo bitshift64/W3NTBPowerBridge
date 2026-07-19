@@ -1,5 +1,6 @@
 param(
-    [switch]$NoDesktopShortcut
+    [switch]$NoDesktopShortcut,
+    [switch]$Quiet
 )
 
 $ErrorActionPreference = "Stop"
@@ -76,6 +77,9 @@ Set-ItemProperty -Path $uninstallKey -Name "UninstallString" -Value "powershell.
 Set-ItemProperty -Path $uninstallKey -Name "NoModify" -Value 1 -Type DWord
 Set-ItemProperty -Path $uninstallKey -Name "NoRepair" -Value 1 -Type DWord
 
-[System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
-[System.Windows.Forms.MessageBox]::Show("$appName has been installed.", $appName) | Out-Null
+if (-not $Quiet) {
+    [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
+    [System.Windows.Forms.MessageBox]::Show("$appName has been installed.", $appName) | Out-Null
+}
+
 Start-Process -FilePath $exePath
